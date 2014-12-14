@@ -9,7 +9,7 @@ app.get("/", function(req, res) {
 });
  
 // initializing a port
-app.listen( 5000);
+app.listen(3000);
 
 /*
 var Sequelize = require('sequelize')

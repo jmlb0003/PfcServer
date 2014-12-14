@@ -1,12 +1,11 @@
 {
   "name": "node-api",
-  "description": "Server side REST-Application",
+  "description": "Server side REST-Application for PFC",
   "version": "0.0.1",
   "main": "app.js",
   "private": true,
   "dependencies": {
     "express": "*",
-    "sequelize": "*",
-    "crypto": "*"
+    "sequelize": "*"
   }
 }
