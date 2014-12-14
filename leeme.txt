@@ -1,0 +1,5 @@
+1- Instalar node.js:
+	http://nodejs.org/
+2- Se crea la carpeta del proyecto:
+	(en drive/universidad/proyecto/node-rest-server)
+	

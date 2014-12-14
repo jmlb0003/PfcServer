@@ -1,0 +1,14 @@
+{
+  "dev": {
+    "driver": "mysql",
+    "user": "root",
+    "database": "basededatosespacial",
+    "password": "mysql1234"
+  },
+ 
+  "production": {
+    "driver": "mysql",
+    "user": "root",
+    "database": "myapp"
+  }
+}

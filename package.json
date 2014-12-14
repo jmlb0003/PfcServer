@@ -1,0 +1,12 @@
+{
+  "name": "node-api",
+  "description": "Server side REST-Application",
+  "version": "0.0.1",
+  "main": "app.js",
+  "private": true,
+  "dependencies": {
+    "express": "*",
+    "sequelize": "*",
+    "crypto": "*"
+  }
+}
