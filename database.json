@@ -3,7 +3,8 @@
     "driver": "mysql",
     "user": "root",
     "database": "basededatosespacial",
-    "password": "mysql1234"
+    "password": "mysql1234",
+    "port": "3306"
   },
  
   "production": {

@@ -6,6 +6,8 @@
   "private": true,
   "dependencies": {
     "express": "*",
-    "sequelize": "*"
+    "sequelize": "*",
+    "mysql": "*",
+    "body-parser": "*"
   }
 }

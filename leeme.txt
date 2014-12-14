@@ -1,5 +1,21 @@
 1- Instalar node.js:
 	http://nodejs.org/
-2- Se crea la carpeta del proyecto:
-	(en drive/universidad/proyecto/node-rest-server)
-	
+
+2- Se crea la carpeta del proyecto y el repositorio en github:
+	Crear el repositorio en la página github.com
+	Con la app, se clona el repositorio a la carpeta en el pc (...drive/
+	universidad/proyecto/PfcServer)
+	Se van añadiendo los archivos y sincronizando según se quiera...
+
+3- Crear el archivo package.json en el directorio raiz del proyecto. Este lleva las
+dependencias de la aplicación y demás.
+
+4- Se abre la consola y se va al directorio raíz o directamente se abre allí con 
+(CTRL+SHIFT+Click Derecho). Se escribe en consola npm install para instalar lo indicado
+en package.json. Aparecerá una carpeta node_modules con lo instalado.
+
+5- Se crea y escribe el archivo main de la aplicación (app.js). Para ejecutarla, hay 
+que escribir en consola: node app.js. Para pararlo se escribe:(CTRL+SHIFT+C)
+
+6- Para que funcione con mysql hay que escribir en consola:
+	npm install mysql
