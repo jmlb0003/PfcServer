@@ -1,5 +1,5 @@
 var Sequelize = require('sequelize');
-console.log('en model');
+
 module.exports = function(sequelize) {
 	var Poi = sequelize.define('poi', {
 		ID_Poi: { 
@@ -82,10 +82,9 @@ module.exports = function(sequelize) {
 		tableName: 'poi',
 		timestamps: false
 	});
-console.log('mod1');
+
 	return {
 		Poi: Poi
 	};
-	console.log('mod2');
 };
 

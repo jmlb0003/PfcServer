@@ -13,7 +13,7 @@ var port = process.env.PORT || 8080;
 // db config
 var config = require('./database.json')[env];
 var password = config.password ? config.password : null;
-console.log('ap1');
+
 // initialize database connection
 var Sequelize = require('sequelize')
 	, sequelize = new Sequelize(
@@ -27,7 +27,7 @@ var Sequelize = require('sequelize')
 	    	timestamps: false //Timestamp columns -> false
 	    }
 	});
-console.log('ap2');
+
 sequelize
 	.authenticate()
   	.complete(function(err) {
@@ -49,29 +49,47 @@ sequelize
 
 	var router = express.Router();
 
-	var cabecera = {"api_pfc" :[]};
+	/*********************************************
+
+	hacer un router.route('/pois')
+	.get(asdñ,asdl,añsdlasñ) {
+	
+	});
+	y luego hacer router.route('/pois/:valor')
+	.get(asdasd){
+	
+	}
+	*/
+
+
 
 	router.route('/pois/:valor?')
 	.get (function(req,res) {
 		if (req.query.lat&&req.query.lon&&req.query.dist) {
-			console.log('Latitud es ' + req.query.lat + ' y longitud es ' +req.query.lon+ 'y la distancia esss '+ req.query.dist);
 			sequelize.query(
 				"SELECT * " +
 				"FROM poi " +
 				"WHERE " +
 				 	"(6371 * acos( cos((" + req.query.lat + " * PI() / 180)) * " +
-	  				"cos((Latitud * PI() / 180)) * cos((Longitud * PI() / 180) - (" + req.query.lon + " * PI() / 180)) " +
-	  				"sin((" + req.query.lat + " * PI() / 180)) * sin((Latitud * PI() / 180)) )) < '" + req.query.dist + "'"
-			).success(function(myTableRows) {
-		  		res.json(myTableRows);
+	  				"cos((Latitud * PI() / 180)) * cos((Longitud * PI() / 180) - " +
+	  				"(" + req.query.lon + " * PI() / 180)) + sin((" + req.query.lat + 
+	  				" * PI() / 180)) * sin((Latitud * PI() / 180)) )) < '" + req.query.dist + "'"
+			).then(function (pois) {
+				var cabecera = {"api_pfc" :[]};
+				cabecera.api_pfc.push(pois);
+		  		res.json(cabecera);
+			}).catch(function (err) {
+				console.log(err);
+				res.send("User not found");
 			});
-			
+		
 		} else {
 			Poi.findAll()
 			.then(function (pois) {
+				var cabecera = {"api_pfc" :[]};
 				cabecera.api_pfc.push(pois);
 				res.json(cabecera);
-			}).catch(function(err) {
+			}).catch(function (err) {
 				console.log(err);
 				res.send("User not found");
 			});
