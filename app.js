@@ -1,10 +1,12 @@
 
 // BASE SETUP
 // =============================================================================
-var app = require('express')();
+var express = require('express'),
+	app = express();
 var bodyParser = require('body-parser');
 var env = app.get('env') == 'development' ? 'dev' : app.get('env');
 var port = process.env.PORT || 8080;
+
 
 // IMPORT MODELS
 // =============================================================================
@@ -35,16 +37,56 @@ sequelize
       		console.log('Connection has been established successfully.');
       		// START THE SERVER
 			// =============================================================================
-			console.log('ap3');
 			app.listen(port);
-			console.log('ap4');
 			console.log('Magic happens on port ' + port);
-
-			var poisQueries = require('./pois_query')(sequelize);
-			app.get('/pois', poisQueries.getAll);
     	}
   	});
-console.log('ap5');
+
+
+  	var model = require("./model")(sequelize);
+	var Poi = model.Poi;
+
+
+	var router = express.Router();
+
+	var cabecera = {"api_pfc" :[]};
+
+	router.route('/pois/:valor?')
+	.get (function(req,res) {
+		if (req.query.lat&&req.query.lon&&req.query.dist) {
+			console.log('Latitud es ' + req.query.lat + ' y longitud es ' +req.query.lon+ 'y la distancia esss '+ req.query.dist);
+			sequelize.query(
+				"SELECT * " +
+				"FROM poi " +
+				"WHERE " +
+				 	"(6371 * acos( cos((" + req.query.lat + " * PI() / 180)) * " +
+	  				"cos((Latitud * PI() / 180)) * cos((Longitud * PI() / 180) - (" + req.query.lon + " * PI() / 180)) " +
+	  				"sin((" + req.query.lat + " * PI() / 180)) * sin((Latitud * PI() / 180)) )) < '" + req.query.dist + "'"
+			).success(function(myTableRows) {
+		  		res.json(myTableRows);
+			});
+			
+		} else {
+			Poi.findAll()
+			.then(function (pois) {
+				cabecera.api_pfc.push(pois);
+				res.json(cabecera);
+			}).catch(function(err) {
+				console.log(err);
+				res.send("User not found");
+			});
+		}
+	});
+
+
+
+	app.use('/',router);
+
+
+
+	
+
+
 
 /*var poisQueries = require('./routes/pois_query')(sequelize);
 sequelize.sync().success(function(err) {

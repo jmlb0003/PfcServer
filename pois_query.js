@@ -2,10 +2,26 @@
 //http://sequelizejs.com/docs/1.7.8/usage#raw-queries
 //Como hacer una consulta para sequelize
 
-console.log('en poisquerys');
-module.exports = function (sequelize) {
+exports.buscar = function(req,res) {
 	var model = require("./model")(sequelize);
 	var Poi = model.Poi;
+	Poi.findAll()
+			.then(function (pois) {
+				res.send(pois);
+			}).catch(function(err) {
+				console.log(err);
+				res.send("User not found");
+			});
+}
+
+
+
+
+
+
+console.log('en poisquerys');
+module.exports = function (sequelize) {
+	
 	return {
 		getAll: function (req, res) {
 			Poi.findAll()
