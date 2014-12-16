@@ -1,3 +1,4 @@
+//http://scotch.io/tutorials/javascript/learn-to-use-the-new-router-in-expressjs-4
 
 // BASE SETUP
 // =============================================================================
@@ -43,71 +44,107 @@ sequelize
   	});
 
 
-  	var model = require("./model")(sequelize);
-	var Poi = model.Poi;
+var model = require("./model")(sequelize);
+var Poi = model.Poi;
+var router = express.Router();
 
 
-	var router = express.Router();
+// REGISTER OUR ROUTES (esto debería ir en otro archivo...)
+// =============================================================================
+app.use('/pfc_api', router);
 
-	/*********************************************
+// IMPORT routes 
+// =============================================================================
 
-	hacer un router.route('/pois')
-	.get(asdñ,asdl,añsdlasñ) {
-	
-	});
-	y luego hacer router.route('/pois/:valor')
-	.get(asdasd){
-	
+router.route('/pois_by_location/:valor?')
+.get (function(req,res) {
+	if (req.query.lat && isADecimal(req.query.lat) &&
+		req.query.lon && isADecimal(req.query.lon) &&
+		req.query.dist && isADecimal(req.query.dist)) {
+
+		sequelize.query(
+			"SELECT * " +
+			"FROM poi " +
+			"WHERE " +
+				"(6371 * acos( cos((" + req.query.lat + " * PI() / 180)) * " +
+				"cos((Latitud * PI() / 180)) * cos((Longitud * PI() / 180) - " +
+				"(" + req.query.lon + " * PI() / 180)) + sin((" + req.query.lat + 
+				" * PI() / 180)) * sin((Latitud * PI() / 180)) )) < '" + req.query.dist + "'"
+		).then(function (pois) {
+			var cabecera = {"api_pfc" :[]};
+			cabecera.api_pfc.push(pois);
+			res.json(cabecera);
+		}).catch(function (err) {
+			//console.log(err);
+			res.send("User not found");
+		});
+	}else{
+		res.send("404, Bad URL");
 	}
-	*/
+});
 
 
-
-	router.route('/pois/:valor?')
-	.get (function(req,res) {
-		if (req.query.lat&&req.query.lon&&req.query.dist) {
-			sequelize.query(
-				"SELECT * " +
-				"FROM poi " +
-				"WHERE " +
-				 	"(6371 * acos( cos((" + req.query.lat + " * PI() / 180)) * " +
-	  				"cos((Latitud * PI() / 180)) * cos((Longitud * PI() / 180) - " +
-	  				"(" + req.query.lon + " * PI() / 180)) + sin((" + req.query.lat + 
-	  				" * PI() / 180)) * sin((Latitud * PI() / 180)) )) < '" + req.query.dist + "'"
-			).then(function (pois) {
-				var cabecera = {"api_pfc" :[]};
-				cabecera.api_pfc.push(pois);
-		  		res.json(cabecera);
-			}).catch(function (err) {
-				console.log(err);
-				res.send("User not found");
-			});
-		
-		} else {
-			Poi.findAll()
-			.then(function (pois) {
-				var cabecera = {"api_pfc" :[]};
-				cabecera.api_pfc.push(pois);
-				res.json(cabecera);
-			}).catch(function (err) {
-				console.log(err);
-				res.send("User not found");
-			});
-		}
+router.route('/all_pois/')
+.get (function(req,res) {
+	Poi.findAll()
+	.then(function (pois) {
+		var cabecera = {"api_pfc" :[]};
+		cabecera.api_pfc.push(pois);
+		res.json(cabecera);
+	}).catch(function (err) {
+		//console.log(err);
+		res.send("User not found");
 	});
+});
+
+/**
+ * Método para validar los valores numéricos pasados en URL
+ */
+function isADecimal(n) {
+  return !isNaN(parseFloat(n)) && isFinite(n);
+}
 
 
+/********************************Esto es lo que se hacía para coger la función en el otro archivo
 
-	app.use('/',router);
-
-
-
-	
-
-
-
-/*var poisQueries = require('./routes/pois_query')(sequelize);
+var poisQueries = require('./routes/pois_query')(sequelize);
 sequelize.sync().success(function(err) {
-	app.get('/pois', poisQueries.get);
+	app.get('/pois', poisQueries.getAll);
 })
+*/
+
+
+/************************************* Esto es lo que hice con el Gila
+router.route('/pois/:valor?')
+.get (function(req,res) {
+	if (req.query.lat&&req.query.lon&&req.query.dist) {
+		sequelize.query(
+			"SELECT * " +
+			"FROM poi " +
+			"WHERE " +
+				"(6371 * acos( cos((" + req.query.lat + " * PI() / 180)) * " +
+				"cos((Latitud * PI() / 180)) * cos((Longitud * PI() / 180) - " +
+				"(" + req.query.lon + " * PI() / 180)) + sin((" + req.query.lat + 
+				" * PI() / 180)) * sin((Latitud * PI() / 180)) )) < '" + req.query.dist + "'"
+		).then(function (pois) {
+			var cabecera = {"api_pfc" :[]};
+			cabecera.api_pfc.push(pois);
+			res.json(cabecera);
+		}).catch(function (err) {
+			console.log(err);
+			res.send("User not found");
+		});
+	
+	} else {
+		Poi.findAll()
+		.then(function (pois) {
+			var cabecera = {"api_pfc" :[]};
+			cabecera.api_pfc.push(pois);
+			res.json(cabecera);
+		}).catch(function (err) {
+			console.log(err);
+			res.send("User not found");
+		});
+	}
+});
 */

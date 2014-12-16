@@ -1,7 +1,7 @@
 //http://sequelizejs.com/docs/latest/models#block-1-line-4
 //http://sequelizejs.com/docs/1.7.8/usage#raw-queries
 //Como hacer una consulta para sequelize
-
+/*
 exports.buscar = function(req,res) {
 	var model = require("./model")(sequelize);
 	var Poi = model.Poi;
@@ -13,20 +13,20 @@ exports.buscar = function(req,res) {
 				res.send("User not found");
 			});
 }
+*/
 
 
 
-
-
-
-console.log('en poisquerys');
 module.exports = function (sequelize) {
-	
+	console.log('pois1');
 	return {
 		getAll: function (req, res) {
+			console.log('pois2');
 			Poi.findAll()
 			.then(function (pois) {
-				res.send(pois);
+				var cabecera = {"api_pfc" :[]};
+				cabecera.api_pfc.push(pois);
+				res.json(cabecera);
 			}).catch(function(err) {
 				console.log(err);
 				res.send("User not found");
@@ -34,7 +34,7 @@ module.exports = function (sequelize) {
 		}
 	};
 };
-console.log('quer2');
+
 /*
 var models  = require('../models');
 var express = require('express');
